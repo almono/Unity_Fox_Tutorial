@@ -4,12 +4,10 @@ using UnityEngine;
 
 public class SmasherEnemyController : MonoBehaviour
 {
-    public float fallSpeed = 5f;
-    public float waitAfterSlam = 1f;
-    public float slamCooldown = 2f;
+    public float fallSpeed = 5f, waitAfterSlam = 1f, slamCooldown = 2f;
     public Transform slammerBody, slammerTarget;
 
-    public bool isSlamming = false, resetting = false;
+    private bool isSlamming = false, resetting = false;
     private float waitCounter;
     private Vector3 startPoint;
 

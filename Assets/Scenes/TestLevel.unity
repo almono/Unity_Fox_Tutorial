@@ -1241,6 +1241,7 @@ GameObject:
   m_Component:
   - component: {fileID: 994407620}
   - component: {fileID: 994407621}
+  - component: {fileID: 994407622}
   m_Layer: 8
   m_Name: PlayerKillerArea
   m_TagString: Untagged
@@ -1308,6 +1309,18 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.8831925, y: 0.19004792}
   m_EdgeRadius: 0
+--- !u!114 &994407622
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 994407619}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 82b3aa27c15953d4bb6f376cc9ecd6b7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!4 &1270234302 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 3507033450161286243, guid: 2b0b38590155f0d42ab2a7767675ceb8, type: 3}
@@ -1505,8 +1518,6 @@ MonoBehaviour:
   slamCooldown: 2
   slammerBody: {fileID: 137480669}
   slammerTarget: {fileID: 956854848}
-  isSlamming: 0
-  resetting: 0
 --- !u!4 &1557003778
 Transform:
   m_ObjectHideFlags: 0
