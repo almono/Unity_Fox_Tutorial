@@ -4,7 +4,7 @@ using UnityEngine;
 
 public class TankBossController : MonoBehaviour
 {
-    public enum bossStates { shooting, hurt, moving };
+    public enum bossStates { shooting, hurt, moving, ended };
     public bossStates currentState;
 
     [Header("General")]
@@ -13,8 +13,11 @@ public class TankBossController : MonoBehaviour
 
     [Header("Movement")]
     public float moveSpeed = 12f;
-    public Transform leftPoint, rightPoint;
+    public Transform leftPoint, rightPoint, minePoint;
     private bool movingRight = false;
+    public GameObject bossMine;
+    public float timeBetweenMines = 1f;
+    private float mineCounter = 0f;
 
     [Header("Attacks")]
     public GameObject bossBullet;
@@ -25,6 +28,13 @@ public class TankBossController : MonoBehaviour
     [Header("Getting Hurt")]
     public float hurtTime = 4f; // how long to wait after getting hurt
     private float hurtCounter;
+    public GameObject bossHitbox;
+
+    [Header("Health")]
+    public int health = 1;
+    public GameObject explosion;
+    private bool isDefeated = false;
+    public float shotSpeedUp = 1.2f, mineSpeedUp = 1.2f; // multiply speed by these values so each time +20%
 
     // Start is called before the first frame update
     void Start()
@@ -39,6 +49,17 @@ public class TankBossController : MonoBehaviour
         {
             case bossStates.shooting:
 
+                shotCounter -= Time.deltaTime;
+
+                if(shotCounter <= 0)
+                {
+                    shotCounter = timeBetweenShots;
+
+                    // create new bullet instance
+                    var newBullet = Instantiate(bossBullet, firePoint.position, firePoint.rotation);
+                    newBullet.transform.localScale = theBoss.localScale;
+                }
+
                 break;
             case bossStates.hurt: 
                 
@@ -49,6 +70,15 @@ public class TankBossController : MonoBehaviour
                     if(hurtCounter <= 0)
                     {
                         currentState = bossStates.moving;
+                        mineCounter = 0f;
+
+                        if (isDefeated)
+                        {
+                            theBoss.gameObject.SetActive(false);
+                            Instantiate(explosion, theBoss.position, theBoss.rotation);
+
+                            currentState = bossStates.ended; // dont need case because nothing is going to happen in it
+                        }
                     }
                 }
 
@@ -78,7 +108,15 @@ public class TankBossController : MonoBehaviour
                         EndMovement();
                     }
                 }
-                
+
+                mineCounter -= Time.deltaTime;
+
+                if (mineCounter <= 0f)
+                {
+                    mineCounter = timeBetweenMines;
+                    Instantiate(bossMine, minePoint.position, minePoint.rotation);
+                }
+
                 break;
         }
 
@@ -97,6 +135,30 @@ public class TankBossController : MonoBehaviour
         hurtCounter = hurtTime;
 
         bossAnimation.SetTrigger("isHit");
+
+        
+        // In case we want to destroy all mines after each movement
+          
+        TankBossMine[] mines = FindObjectsOfType<TankBossMine>();
+        if(mines.Length > 0)
+        {
+            foreach(TankBossMine mine in mines)
+            {
+                mine.Explode();
+            }
+        }
+
+        health--;
+
+        if(health <= 0)
+        {
+            isDefeated = true;
+        } else
+        {
+            // make fight harder with each hit
+            timeBetweenShots /= shotSpeedUp;
+            timeBetweenMines /= mineSpeedUp;
+        }
     }
 
     private void EndMovement()
@@ -104,5 +166,6 @@ public class TankBossController : MonoBehaviour
         currentState = bossStates.shooting;
         shotCounter = timeBetweenShots;
         bossAnimation.SetTrigger("stopMoving");
+        bossHitbox.SetActive(true);
     }
 }
