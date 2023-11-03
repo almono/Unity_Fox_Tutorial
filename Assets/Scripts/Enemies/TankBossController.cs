@@ -32,7 +32,7 @@ public class TankBossController : MonoBehaviour
 
     [Header("Health")]
     public int health = 1;
-    public GameObject explosion;
+    public GameObject explosion, winPlatforms;
     private bool isDefeated = false;
     public float shotSpeedUp = 1.2f, mineSpeedUp = 1.2f; // multiply speed by these values so each time +20%
 
@@ -78,6 +78,8 @@ public class TankBossController : MonoBehaviour
                             Instantiate(explosion, theBoss.position, theBoss.rotation);
 
                             currentState = bossStates.ended; // dont need case because nothing is going to happen in it
+                            winPlatforms.SetActive(true);
+                            AudioManager.instance.StopBossMusic();
                         }
                     }
                 }
@@ -133,6 +135,7 @@ public class TankBossController : MonoBehaviour
     {
         currentState = bossStates.hurt;
         hurtCounter = hurtTime;
+        AudioManager.instance.PlaySFX(0);
 
         bossAnimation.SetTrigger("isHit");
 

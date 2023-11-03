@@ -9,7 +9,7 @@ public class TankBossBulletController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+        AudioManager.instance.PlaySFX(2);
     }
 
     // Update is called once per frame
@@ -27,6 +27,7 @@ public class TankBossBulletController : MonoBehaviour
             PlayerHealthController.instance.DealDamage();
         }
 
+        AudioManager.instance.PlaySFX(1);
         Destroy(gameObject);
     }
 }
